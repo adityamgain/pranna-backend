@@ -19,8 +19,8 @@ urlpatterns = [
     path('api/gallery/', include('gallery.urls')),
     path('api/testimonials/', include('testimonials.urls')),
 
-    path('jet/', include('jet.urls', 'jet')),  # JET UI components
-    path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
+    # path('jet/', include('jet.urls', 'jet')),  # JET UI components
+    # path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     path('django_plotly_dash/', include('django_plotly_dash.urls')),
 
 ]
