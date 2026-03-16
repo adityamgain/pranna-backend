@@ -33,8 +33,6 @@ CSRF_TRUSTED_ORIGINS = [
 
 # Application definition
 INSTALLED_APPS = [
-    'jet.dashboard',
-    'jet',
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -254,7 +252,6 @@ STATICFILES_FINDERS = [
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
-JET_INDEX_DASHBOARD = 'checkout.dashboard.CustomIndexDashboard'
 
 # ========== PRODUCTION SECURITY SETTINGS ==========
 if not DEBUG:
