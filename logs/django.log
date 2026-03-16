@@ -62,3 +62,11 @@ INFO 2026-03-01 17:54:06,016 email_utils 87239 6200406016 Verification email sen
 INFO 2026-03-01 17:54:06,021 email_utils 87239 6200406016 SMS verification code 776804 sent to 9840253324
 INFO 2026-03-01 17:54:42,495 email_utils 87239 6200406016 Order confirmation email sent to amgainaditya@gmail.com
 INFO 2026-03-01 17:54:47,636 email_utils 87239 6200406016 Admin notification sent to amgainaditya@gmail.com
+ERROR 2026-03-16 05:52:14,598 email_utils 58466 6234451968 Failed to send verification email to amgainaditya@gmail.com: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-82a07268aebsm12832179b3a.23 - gsmtp')
+ERROR 2026-03-16 05:52:14,599 views 58466 6234451968 Verification error: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-82a07268aebsm12832179b3a.23 - gsmtp')
+ERROR 2026-03-16 05:52:22,934 email_utils 58466 6234451968 Failed to send verification email to amgainaditya@gmail.com: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials d9443c01a7336-2aece56cde9sm110657305ad.15 - gsmtp')
+ERROR 2026-03-16 05:52:22,934 views 58466 6234451968 Verification error: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials d9443c01a7336-2aece56cde9sm110657305ad.15 - gsmtp')
+ERROR 2026-03-16 05:54:25,513 email_utils 58740 6194540544 Failed to send verification email to amgainaditya@gmail.com: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-82a07389ca9sm11386098b3a.59 - gsmtp')
+ERROR 2026-03-16 05:54:25,515 views 58740 6194540544 Verification error: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-82a07389ca9sm11386098b3a.59 - gsmtp')
+INFO 2026-03-16 05:55:42,563 email_utils 58930 6165999616 Verification email sent to amgainaditya@gmail.com
+INFO 2026-03-16 05:55:42,567 email_utils 58930 6165999616 SMS verification code 451121 sent to 9876873343
