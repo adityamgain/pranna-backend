@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Order Notification - Prenna Wellness</title>
+    <style>
+        /* Simple, clean styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            color: #333333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .header {
+            background-color: #343f2f;
+            color: white;
+            padding: 24px 30px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 500;
+            color: #d2c5b5;
+            margin: 0;
+        }
+
+        .header p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            color: #d2c5b5;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .greeting {
+            font-size: 16px;
+            margin: 0 0 20px;
+        }
+
+        .order-info {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 0 0 25px;
+            border-left: 4px solid #d2c5b5;
+        }
+
+        .order-info h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 15px;
+            color: #2c3a33;
+        }
+
+        .info-row {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #555555;
+            display: inline-block;
+            width: 100px;
+        }
+
+        .info-value {
+            color: #333333;
+        }
+
+        .items-section {
+            margin: 20px 0 0;
+        }
+
+        .items-section h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0 0 12px;
+            color: #2c3a33;
+        }
+
+        .items-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .items-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eeeeee;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .items-list li:last-child {
+            border-bottom: none;
+        }
+
+        .item-name {
+            color: #333333;
+        }
+
+        .item-quantity {
+            color: #777777;
+            font-size: 13px;
+        }
+
+        .item-price {
+            font-weight: 500;
+            color: #2c3a33;
+        }
+
+        .total-row {
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 2px solid #dddddd;
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3a33;
+        }
+
+        .payment-badge {
+            display: inline-block;
+            background-color: #d2c5b5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #2c3a33;
+            margin-left: 8px;
+        }
+
+        .admin-link {
+            text-align: center;
+            margin: 30px 0 0;
+        }
+
+        .admin-link a {
+            display: inline-block;
+            background-color: #2c3a33;
+            color: white;
+            text-decoration: none;
+            padding: 10px 25px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .admin-link a:hover {
+            background-color: #1e2c26;
+        }
+
+        .footer {
+            padding: 20px 30px;
+            background-color: #f9f9f9;
+            text-align: center;
+            border-top: 1px solid #eeeeee;
+            font-size: 12px;
+            color: #777777;
+        }
+
+        .footer .brand {
+            font-weight: 600;
+            color: #2c3a33;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .header, .content, .footer { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Simple header -->
+        <div class="header">
+            <h1>New Order Received</h1>
+            <p>Prenna Wellness Retreat</p>
+        </div>
+
+        <!-- Main content -->
+        <div class="content">
+            <p class="greeting">Dear Team,</p>
+            <p style="margin-bottom: 20px;">A new order has been placed.</p>
+
+            <!-- Order information - simple card style -->
+            <div class="order-info">
+                <h3>Order #{{ order_id }}</h3>
+
+                <div class="info-row">
+                    <span class="info-label">Customer:</span>
+                    <span class="info-value">{{ customer_name }}</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Email:</span>
+                    <span class="info-value">{{ customer_email }}</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Phone:</span>
+                    <span class="info-value">{{ customer_phone }}</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Shipping:</span>
+                    <span class="info-value">{{ shipping_address }}</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Payment:</span>
+                    <span class="info-value">
+                        Cash on Delivery
+                        <span class="payment-badge">COD</span>
+                    </span>
+                </div>
+
+                <!-- Items list -->
+                <div class="items-section">
+                    <h4>Order items</h4>
+                    <ul class="items-list">
+                        {% for item in items %}
+                        <li>
+                            <span>
+                                <span class="item-name">{{ item.name }}</span>
+                                <span class="item-quantity"> × {{ item.quantity }}</span>
+                            </span>
+                            <span class="item-price">Rs. {{ item.price }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                    <!-- Total -->
+                    <div class="total-row">
+                        <span>Total:</span>
+                        <span>Rs. {{ total }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Simple admin link -->
+            <div class="admin-link">
+                <a href="http://localhost:8000/admin/checkout/order/{{ order.id }}/">
+                    View Order
+                </a>
+            </div>
+        </div>
+
+        <!-- Simple footer -->
+        <div class="footer">
+            <div class="brand">Prenna Wellness Retreat</div>
+            <div>Himalayan stillness, worldwide</div>
+            <div style="margin-top: 10px;">© 2026 Prenna Wellness</div>
+        </div>
+    </div>
+</body>
+</html>

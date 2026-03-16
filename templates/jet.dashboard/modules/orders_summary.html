@@ -1,0 +1,155 @@
+{% load i18n %}
+
+<div class="orders-summary">
+    <div class="metric-grid">
+        <!-- Orders Card -->
+        <div class="metric-card">
+            <div class="metric-icon" style="background-color: #e3f2fd; color: #0d6efd;">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <div class="metric-content">
+                <div class="metric-value">{{ total_orders }}</div>
+                <div class="metric-label">{% trans 'Total Orders' %}</div>
+            </div>
+        </div>
+        <!-- Revenue Card -->
+        <div class="metric-card">
+            <div class="metric-icon" style="background-color: #e8f5e9; color: #198754;">
+                <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="metric-content">
+                <div class="metric-value">${{ total_revenue|floatformat:0 }}</div>
+                <div class="metric-label">{% trans 'Total Revenue' %}</div>
+            </div>
+        </div>
+        <!-- Pending Card -->
+        <div class="metric-card">
+            <div class="metric-icon" style="background-color: #fff3cd; color: #ffc107;">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="metric-content">
+                <div class="metric-value">{{ pending_orders }}</div>
+                <div class="metric-label">{% trans 'Pending' %}</div>
+            </div>
+        </div>
+        <!-- Delivered Card -->
+        <div class="metric-card">
+            <div class="metric-icon" style="background-color: #d1e7dd; color: #0f5132;">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="metric-content">
+                <div class="metric-value">{{ delivered_orders }}</div>
+                <div class="metric-label">{% trans 'Delivered' %}</div>
+            </div>
+        </div>
+        <!-- Today's Orders -->
+        <div class="metric-card">
+            <div class="metric-icon" style="background-color: #cfe2ff; color: #084298;">
+                <i class="fas fa-calendar-day"></i>
+            </div>
+            <div class="metric-content">
+                <div class="metric-value">{{ orders_today }}</div>
+                <div class="metric-label">{% trans 'Today' %}</div>
+            </div>
+        </div>
+        <!-- Avg Order Value -->
+        <div class="metric-card">
+            <div class="metric-icon" style="background-color: #f8d7da; color: #842029;">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="metric-content">
+                <div class="metric-value">${{ avg_order_value|floatformat:0 }}</div>
+                <div class="metric-label">{% trans 'Avg Order' %}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional stats -->
+    <div class="detailed-stats">
+        <span><strong>{% trans 'Confirmed:' %}</strong> {{ confirmed_orders }}</span>
+        <span><strong>{% trans 'Shipped:' %}</strong> {{ shipped_orders }}</span>
+        <span><strong>{% trans 'Cancelled:' %}</strong> {{ cancelled_orders }}</span>
+        <span><strong>{% trans 'Active Coupons:' %}</strong> {{ active_coupons }}</span>
+    </div>
+</div>
+
+<style>
+    .orders-summary {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        width: 100%;
+    }
+    .metric-card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 15px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        border: 1px solid #eee;
+        transition: all 0.2s;
+        min-width: 0; /* Prevents overflow issues */
+    }
+    .metric-card:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .metric-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        margin-right: 15px;
+        flex-shrink: 0;
+    }
+    .metric-content {
+        flex: 1;
+        min-width: 0; /* Allows text truncation if needed */
+    }
+    .metric-value {
+        font-size: 1.6rem;
+        font-weight: 600;
+        line-height: 1.2;
+        color: #333;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .metric-label {
+        font-size: 0.85rem;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .detailed-stats {
+        margin-top: 15px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        font-size: 0.9em;
+        color: #666;
+        padding: 10px 0;
+        border-top: 1px solid #eee;
+    }
+    @media (max-width: 768px) {
+        .metric-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    @media (max-width: 480px) {
+        .metric-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

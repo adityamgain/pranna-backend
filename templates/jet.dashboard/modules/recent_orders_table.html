@@ -1,0 +1,84 @@
+{% load i18n %}
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>{% trans 'Order ID' %}</th>
+                <th>{% trans 'Customer' %}</th>
+                <th>{% trans 'Total' %}</th>
+                <th>{% trans 'Status' %}</th>
+                <th>{% trans 'Date' %}</th>
+                <th class="text-end">{% trans 'Actions' %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in recent_orders %}
+            <tr>
+                <td>
+                    <a href="{% url 'admin:checkout_order_change' order.id %}" class="fw-semibold text-decoration-none">
+                        {{ order.order_id }}
+                    </a>
+                </td>
+                <td>{{ order.full_name }}</td>
+                <td class="fw-bold">${{ order.total|floatformat:2 }}</td>
+                <td>
+                    {% with status=order.status %}
+                        <span class="badge
+                            {% if status == 'delivered' %}bg-success
+                            {% elif status == 'pending' %}bg-warning text-dark
+                            {% elif status == 'cancelled' %}bg-danger
+                            {% elif status == 'shipped' %}bg-info text-dark
+                            {% else %}bg-secondary{% endif %}">
+                            {{ order.get_status_display }}
+                        </span>
+                    {% endwith %}
+                </td>
+                <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
+                <td class="text-end">
+                    <a href="{% url 'admin:checkout_order_change' order.id %}" class="btn btn-sm btn-outline-primary">
+                        {% trans 'View' %}
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center text-muted py-4">
+                    {% trans 'No orders yet' %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .recent-orders-table .table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+    }
+    .recent-orders-table .table th {
+        text-align: left;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+    }
+    .recent-orders-table .table td {
+        padding: 10px;
+        border-bottom: 1px solid #e9ecef;
+    }
+    .recent-orders-table .badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    .badge-success { background-color: #d4edda; color: #155724; }
+    .badge-warning { background-color: #fff3cd; color: #856404; }
+    .badge-danger { background-color: #f8d7da; color: #721c24; }
+    .badge-info { background-color: #d1ecf1; color: #0c5460; }
+    .badge-secondary { background-color: #e2e3e5; color: #383d41; }
+</style>

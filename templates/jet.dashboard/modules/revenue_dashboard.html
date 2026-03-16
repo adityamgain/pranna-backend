@@ -1,0 +1,192 @@
+import dash
+import dash_core_components as dcc
+import dash_html_components as html
+from dash.dependencies import Input, Output
+import plotly.graph_objs as go
+import plotly.express as px
+from django.db.models import Sum, Count
+from django.utils import timezone
+from datetime import timedelta
+import pandas as pd
+
+from checkout.models import Order, OrderItem
+
+# Register the Dash app
+app = dash.Dash(__name__, url_base_pathname='/dash/revenue/')
+
+# Define the layout
+app.layout = html.Div([
+    html.H1('Revenue Analytics Dashboard', style={'textAlign': 'center'}),
+
+    html.Div([
+        html.Div([
+            html.Label('Select Date Range:'),
+            dcc.Dropdown(
+                id='date-range',
+                options=[
+                    {'label': 'Last 7 Days', 'value': '7'},
+                    {'label': 'Last 30 Days', 'value': '30'},
+                    {'label': 'Last 90 Days', 'value': '90'},
+                    {'label': 'All Time', 'value': 'all'},
+                ],
+                value='30'
+            ),
+        ], style={'width': '30%', 'display': 'inline-block', 'padding': '20px'}),
+
+        html.Div([
+            html.Label('Group By:'),
+            dcc.Dropdown(
+                id='group-by',
+                options=[
+                    {'label': 'Day', 'value': 'day'},
+                    {'label': 'Week', 'value': 'week'},
+                    {'label': 'Month', 'value': 'month'},
+                ],
+                value='day'
+            ),
+        ], style={'width': '30%', 'display': 'inline-block', 'padding': '20px'}),
+    ]),
+
+    html.Div([
+        html.Div([
+            dcc.Graph(id='revenue-trend')
+        ], style={'width': '50%', 'display': 'inline-block'}),
+
+        html.Div([
+            dcc.Graph(id='order-status-pie')
+        ], style={'width': '50%', 'display': 'inline-block'}),
+    ]),
+
+    html.Div([
+        html.Div([
+            dcc.Graph(id='top-products')
+        ], style={'width': '100%'}),
+    ]),
+
+    html.Div([
+        html.Div([
+            dcc.Graph(id='daily-metrics')
+        ], style={'width': '100%'}),
+    ]),
+])
+
+
+# Callback to update all charts
+@app.callback(
+    [Output('revenue-trend', 'figure'),
+     Output('order-status-pie', 'figure'),
+     Output('top-products', 'figure'),
+     Output('daily-metrics', 'figure')],
+    [Input('date-range', 'value'),
+     Input('group-by', 'value')]
+)
+def update_charts(date_range, group_by):
+    # Calculate date filter
+    today = timezone.now().date()
+    if date_range == 'all':
+        start_date = None
+    else:
+        days = int(date_range)
+        start_date = today - timedelta(days=days)
+
+    # Filter orders
+    orders = Order.objects.filter(status='delivered')
+    if start_date:
+        orders = orders.filter(created_at__date__gte=start_date)
+
+    # Create dataframe for revenue trend
+    df_orders = pd.DataFrame(list(orders.values('created_at', 'total')))
+    if not df_orders.empty:
+        df_orders['date'] = pd.to_datetime(df_orders['created_at']).dt.date
+
+        if group_by == 'day':
+            df_trend = df_orders.groupby('date')['total'].sum().reset_index()
+            x_col = 'date'
+        elif group_by == 'week':
+            df_orders['week'] = pd.to_datetime(df_orders['created_at']).dt.isocalendar().week
+            df_trend = df_orders.groupby('week')['total'].sum().reset_index()
+            x_col = 'week'
+        else:  # month
+            df_orders['month'] = pd.to_datetime(df_orders['created_at']).dt.to_period('M')
+            df_trend = df_orders.groupby('month')['total'].sum().reset_index()
+            df_trend['month'] = df_trend['month'].astype(str)
+            x_col = 'month'
+
+        revenue_fig = go.Figure(data=[
+            go.Scatter(
+                x=df_trend[x_col],
+                y=df_trend['total'],
+                mode='lines+markers',
+                line=dict(color='#0d6efd', width=3),
+                fill='tozeroy',
+                fillcolor='rgba(13, 110, 253, 0.1)'
+            )
+        ])
+        revenue_fig.update_layout(
+            title='Revenue Trend',
+            xaxis_title='Date',
+            yaxis_title='Revenue ($)',
+            template='plotly_white'
+        )
+    else:
+        revenue_fig = go.Figure()
+        revenue_fig.update_layout(title='No data available')
+
+    # Order status pie chart
+    status_counts = Order.objects.values('status').annotate(count=Count('id'))
+    status_fig = px.pie(
+        names=[s['status'] for s in status_counts],
+        values=[s['count'] for s in status_counts],
+        title='Order Status Distribution'
+    )
+
+    # Top products
+    top_products = OrderItem.objects.values('product_name').annotate(
+        total_revenue=Sum('product_price') * Sum('quantity'),
+        total_qty=Sum('quantity')
+    ).order_by('-total_revenue')[:10]
+
+    products_fig = px.bar(
+        x=[p['product_name'] for p in top_products],
+        y=[p['total_revenue'] for p in top_products],
+        title='Top Products by Revenue',
+        labels={'x': 'Product', 'y': 'Revenue ($)'}
+    )
+
+    # Daily metrics heatmap
+    daily_orders = Order.objects.filter(
+        created_at__date__gte=start_date if start_date else today - timedelta(days=90)
+    ).values('created_at__date').annotate(
+        order_count=Count('id'),
+        revenue=Sum('total')
+    ).order_by('created_at__date')
+
+    df_daily = pd.DataFrame(list(daily_orders))
+    if not df_daily.empty:
+        df_daily['date'] = pd.to_datetime(df_daily['created_at__date'])
+        df_daily['day'] = df_daily['date'].dt.day_name()
+        df_daily['week'] = df_daily['date'].dt.isocalendar().week
+
+        pivot = df_daily.pivot_table(
+            values='revenue',
+            index='day',
+            columns='week',
+            aggfunc='sum',
+            fill_value=0
+        )
+
+        # Reorder days
+        day_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        pivot = pivot.reindex(day_order)
+
+        heatmap_fig = px.imshow(
+            pivot,
+            title='Revenue Heatmap (Day of Week vs Week)',
+            labels=dict(x='Week', y='Day of Week', color='Revenue'),
+            color_continuous_scale='Blues'
+        )
+    else:
+        heatmap_fig = go.Figure()
+        heatmap_fig.update_layout(title='No daily data available')
+
+    return revenue_fig, status_fig, products_fig, heatmap_fig

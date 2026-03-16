@@ -1,0 +1,56 @@
+{% load i18n %}
+
+<div class="revenue-chart-container">
+    <canvas id="revenueChart" width="400" height="200"></canvas>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ labels|safe }},
+                datasets: [{
+                    label: '{% trans "Revenue ($)" %}',
+                    data: {{ revenue_data }},
+                    backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                    borderColor: '#0d6efd',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: true,
+                    pointBackgroundColor: '#0d6efd',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { mode: 'index', intersect: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#eee' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    });
+</script>
+
+<style>
+    .revenue-chart-container {
+        width: 100%;
+        height: 200px;
+        padding: 10px;
+        background: #fff;
+        border-radius: 8px;
+    }
+    .revenue-chart-container canvas {
+        width: 100% !important;
+        height: 100% !important;
+    }
+</style>

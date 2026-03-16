@@ -1,0 +1,373 @@
+{% load i18n %}
+
+<div class="stock-module">
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+        <div class="card total-products">
+            <span class="card-label">{% trans 'Total Products' %}</span>
+            <span class="card-value">{{ total_products }}</span>
+        </div>
+        <div class="card low-stock">
+            <span class="card-label">{% trans 'Low Stock' %}</span>
+            <span class="card-value">{{ low_stock_count }}</span>
+        </div>
+        <div class="card out-of-stock">
+            <span class="card-label">{% trans 'Out of Stock' %}</span>
+            <span class="card-value">{{ out_of_stock }}</span>
+        </div>
+    </div>
+
+    <!-- Low Stock Section (highlighted) -->
+    {% if low_stock_products %}
+    <section class="stock-section alert-section">
+        <header class="section-header">
+            <h3>
+                <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+                {% trans 'Low Stock Alert (≤5)' %}
+            </h3>
+        </header>
+        <div class="table-responsive">
+            <table class="stock-table low-stock">
+                <thead>
+                    <tr>
+                        <th>{% trans 'Product' %}</th>
+                        <th>{% trans 'Category' %}</th>
+                        <th class="text-right">{% trans 'Price' %}</th>
+                        <th class="text-center">{% trans 'Stock' %}</th>
+                        <th class="text-center">{% trans 'Action' %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in low_stock_products %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'admin:merchandise_merchandise_change' product.id %}" class="product-link">
+                                {{ product.name|truncatechars:30 }}
+                            </a>
+                        </td>
+                        <td>{{ product.category.name|default:'—' }}</td>
+                        <td class="text-right">${{ product.price|floatformat:2 }}</td>
+                        <td class="text-center">
+                            <span class="stock-badge {% if product.stock == 0 %}out{% else %}low{% endif %}">
+                                {{ product.stock }}
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <a href="{% url 'admin:merchandise_merchandise_change' product.id %}" class="button small">
+                                {% trans 'Edit' %}
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- In Stock Section -->
+    {% if other_products %}
+    <section class="stock-section">
+        <header class="section-header">
+            <h3>
+                <i class="fas fa-check-circle" aria-hidden="true"></i>
+                {% trans 'In Stock' %}
+            </h3>
+        </header>
+        <div class="scrollable-table">
+            <table class="stock-table">
+                <thead>
+                    <tr>
+                        <th>{% trans 'Product' %}</th>
+                        <th class="text-right">{% trans 'Stock' %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in other_products|slice:":10" %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'admin:merchandise_merchandise_change' product.id %}" class="product-link">
+                                {{ product.name|truncatechars:25 }}
+                            </a>
+                        </td>
+                        <td class="text-right">{{ product.stock }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% if other_products.count > 10 %}
+                    <tr class="more-row">
+                        <td colspan="2">
+                            {% blocktrans with count=other_products.count|add:"-10" %}
+                                … and {{ count }} more
+                            {% endblocktrans %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- View All Link -->
+    <div class="view-all">
+        <a href="{% url 'admin:merchandise_merchandise_changelist' %}" class="button">
+            {% trans 'View All Products' %}
+            <span aria-hidden="true">→</span>
+        </a>
+    </div>
+</div>
+
+<style>
+/* === Professional Stock Module Styles === */
+:root {
+    --color-primary: #0d6efd;
+    --color-success: #198754;
+    --color-warning: #ffc107;
+    --color-danger: #dc3545;
+    --color-info: #0dcaf0;
+    --color-gray-100: #f8f9fa;
+    --color-gray-200: #e9ecef;
+    --color-gray-300: #dee2e6;
+    --color-gray-400: #ced4da;
+    --color-gray-500: #adb5bd;
+    --color-gray-600: #6c757d;
+    --color-gray-700: #495057;
+    --color-gray-800: #343a40;
+    --color-gray-900: #212529;
+
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+
+    --border-radius: 0.375rem;
+    --box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    --font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+}
+
+.stock-module {
+    font-family: var(--font-family);
+    color: var(--color-gray-800);
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: var(--spacing-lg);
+}
+
+/* === Summary Cards === */
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.card {
+    background: var(--color-gray-100);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-md);
+    text-align: center;
+    border-left: 4px solid transparent;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.card.total-products {
+    border-left-color: var(--color-primary);
+}
+.card.low-stock {
+    border-left-color: var(--color-warning);
+}
+.card.out-of-stock {
+    border-left-color: var(--color-danger);
+}
+
+.card-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--spacing-xs);
+}
+
+.card-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+/* === Section Headers === */
+.stock-section {
+    margin-bottom: var(--spacing-xl);
+}
+
+.section-header {
+    margin-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--color-gray-200);
+    padding-bottom: var(--spacing-xs);
+}
+
+.section-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: var(--color-gray-700);
+}
+
+.section-header h3 i {
+    font-size: 1.2rem;
+}
+
+.alert-section .section-header h3 {
+    color: var(--color-danger);
+}
+
+/* === Tables === */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-gray-200);
+}
+
+
+
+.stock-table th {
+    background: var(--color-gray-100);
+    padding: var(--spacing-md) var(--spacing-md);
+    font-weight: 600;
+    color: var(--color-gray-700);
+    white-space: nowrap;
+    border-bottom: 2px solid var(--color-gray-300);
+    text-align: left;
+}
+
+.stock-table td {
+    padding: var(--spacing-md) var(--spacing-md);
+    border-bottom: 1px solid var(--color-gray-200);
+    vertical-align: middle;
+}
+
+.stock-table tbody tr:hover {
+    background-color: var(--color-gray-100);
+}
+
+/* Low stock row highlight */
+.low-stock tbody tr {
+    background-color: #fff3cd33;
+}
+
+.text-right {
+    text-align: right;
+}
+.text-center {
+    text-align: center;
+}
+
+/* === Product Link === */
+.product-link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.product-link:hover {
+    text-decoration: underline;
+}
+
+/* === Stock Badge === */
+.stock-badge {
+    display: inline-block;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 2rem;
+    font-weight: 600;
+    font-size: 0.8rem;
+    min-width: 3rem;
+    text-align: center;
+    background: var(--color-gray-200);
+    color: var(--color-gray-700);
+}
+
+.stock-badge.low {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.stock-badge.out {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* === Buttons === */
+.button {
+    color: white;
+
+}
+
+.button.small {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.8rem;
+}
+
+.button:hover {
+    background: #0b5ed7;
+    color: white;
+}
+
+/* Scrollable Table (for In Stock) */
+.scrollable-table {
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius);
+}
+
+.scrollable-table table {
+    margin-bottom: 0;
+    border: none;
+}
+
+.scrollable-table thead th {
+    position: sticky;
+    top: 0;
+    background: var(--color-gray-100);
+    z-index: 10;
+}
+
+
+/* View All Link */
+.view-all {
+    margin-top: var(--spacing-xl);
+    text-align: right;
+}
+
+.view-all .button {
+    background: var(--color-gray-600);
+}
+
+.view-all .button:hover {
+    background: var(--color-gray-700);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .stock-module {
+        padding: var(--spacing-md);
+    }
+    .summary-cards {
+        grid-template-columns: 1fr;
+    }
+}
+</style>

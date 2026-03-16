@@ -1,0 +1,19 @@
+{% load i18n %}
+
+<div class="plotly-dash-embed">
+    <iframe
+        src="{{ dash_url }}"
+        style="width: 100%; height: 600px; border: none; border-radius: 8px;"
+        title="Revenue Analytics Dashboard"
+    ></iframe>
+</div>
+
+<style>
+    .plotly-dash-embed {
+        width: 100%;
+        padding: 10px 0;
+    }
+    iframe {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+</style>

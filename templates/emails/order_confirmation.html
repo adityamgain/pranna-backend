@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - Pranna Wellness</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #343f2f;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f2eb;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(52, 63, 47, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #343f2f 0%, #1a3a32 100%);
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .logo {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .header h1 {
+            margin: 10px 0 0;
+            font-size: 1.8rem;
+            font-weight: 300;
+            color: white;
+            letter-spacing: 1px;
+        }
+        .content {
+            padding: 40px 30px;
+            background: white;
+        }
+        .content h2 {
+            color: #343f2f;
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        .order-box {
+            background: #f5f2eb;
+            border: 2px solid #d2c5b5;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        .order-number {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #343f2f;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #d2c5b5;
+        }
+        .order-number span {
+            font-weight: 300;
+            color: #71877c;
+            font-size: 0.9rem;
+            margin-right: 8px;
+        }
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .detail-item {
+            margin-bottom: 10px;
+        }
+        .detail-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #71877c;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .detail-value {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #343f2f;
+        }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .items-table th {
+            text-align: left;
+            padding: 10px 0;
+            color: #71877c;
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #d2c5b5;
+        }
+        .items-table td {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0e8e0;
+        }
+        .items-table tr:last-child td {
+            border-bottom: none;
+        }
+        .item-name {
+            font-weight: 500;
+            color: #343f2f;
+        }
+        .item-total {
+            font-weight: 600;
+            color: #343f2f;
+            text-align: right;
+        }
+        .totals {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #d2c5b5;
+        }
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+        }
+        .grand-total {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #343f2f;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #d2c5b5;
+        }
+        .address-block {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f5f2eb;
+            border-radius: 8px;
+        }
+        .address-block h3 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #71877c;
+            margin-bottom: 10px;
+        }
+        .address-block p {
+            margin: 3px 0;
+            color: #343f2f;
+        }
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #d2c5b5, transparent);
+            margin: 30px 0;
+        }
+        .footer {
+            background: #f5f2eb;
+            padding: 25px 20px;
+            text-align: center;
+            color: #71877c;
+            font-size: 0.85rem;
+            border-top: 1px solid #d2c5b5;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .social-links {
+            margin: 15px 0;
+        }
+        .social-links a {
+            display: inline-block;
+            margin: 0 8px;
+            color: #343f2f;
+            text-decoration: none;
+        }
+        .note {
+            font-size: 0.9rem;
+            color: #71877c;
+            font-style: italic;
+        }
+        .button {
+            display: inline-block;
+            background: #343f2f;
+            color: white;
+            text-decoration: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: 500;
+            margin: 5px;
+        }
+        .button-outline {
+            background: transparent;
+            color: #343f2f;
+            border: 2px solid #d2c5b5;
+        }
+        @media screen and (max-width: 480px) {
+            .details-grid {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+            .content {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <img src="https://res.cloudinary.com/dgdbgblvb/image/upload/v1772384812/Pranna_Logo_Design-02-1_pttphe.svg"
+                 alt="Pranna Wellness"
+                 class="logo"
+                 style="display: block; margin: 0 auto; max-width: 150px;">
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <h2>Thank You for Your Order</h2>
+
+            <p style="color: #343f2f;">Dear <strong>{{ customer_name }}</strong>,</p>
+            <p style="color: #343f2f;">Your order has been confirmed and is being prepared with care.</p>
+
+            <!-- Order Details Box -->
+            <div class="order-box">
+                <div class="order-number">
+                    <span>Order</span> #{{ order_id }}
+                </div>
+
+                <!-- Key Details -->
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Order Date</span>
+                        <span class="detail-value">{{ order.created_at|date:"F j, Y" }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Payment</span>
+                        <span class="detail-value">Cash on Delivery</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Delivery</span>
+                        <span class="detail-value">3-7 business days</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Contact</span>
+                        <span class="detail-value">{{ order.phone }}</span>
+                    </div>
+                </div>
+
+                <!-- Items Table -->
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Qty</th>
+                            <th style="text-align: right;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td>
+                                <span class="item-name">{{ item.name }}</span>
+                            </td>
+                            <td>{{ item.quantity }}</td>
+                            <td style="text-align: right;" class="item-total">Rs. {% widthratio item.price 1 item.quantity %}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <!-- Totals -->
+                <div class="totals">
+                    <div class="total-row">
+                        <span>Subtotal</span>
+                        <span>Rs. {{ subtotal }}</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Shipping</span>
+                        <span>{% if shipping == '0' %}Free{% else %}Rs. {{ shipping }}{% endif %}</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Tax (13%)</span>
+                        <span>Rs. {{ tax }}</span>
+                    </div>
+                    {% if discount > 0 %}
+                    <div class="total-row" style="color: #4CAF50;">
+                        <span>Discount</span>
+                        <span>-Rs. {{ discount }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="grand-total">
+                        <div class="total-row">
+                            <span>Total</span>
+                            <span>Rs. {{ total }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipping Address -->
+                <div class="address-block">
+                    <h3>Shipping Address</h3>
+                    <p>{{ order.full_name }}</p>
+                    <p>{{ order.address }}{% if order.apartment %}, {{ order.apartment }}{% endif %}</p>
+                    <p>{{ order.city }}{% if order.state %}, {{ order.state }}{% endif %} {{ order.postal_code }}</p>
+                    <p>{{ order.country }}</p>
+                </div>
+
+            </div>
+
+            <!-- Next Steps -->
+            <div style="margin: 30px 0;">
+                <p style="color: #343f2f; font-weight: 500;">What's next?</p>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 8px; color: #71877c;">✓ Confirmation sent to admin</li>
+                    <li style="margin-bottom: 8px; color: #71877c;">✓ We'll notify you when your order ships</li>
+                    <li style="margin-bottom: 8px; color: #71877c;">✓ Delivery partner will call before arrival</li>
+                </ul>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Support -->
+            <p style="color: #71877c; text-align: center;">Questions? We're here to help</p>
+            <div style="text-align: center; margin: 20px 0;">
+                <a href="mailto:support@pranna.com" class="button">Contact Support</a>
+                <a href="http://localhost:3000/shop" class="button button-outline">Continue Shopping</a>
+            </div>
+
+            <!-- Footer Note -->
+            <p style="color: #71877c; font-size: 0.9rem; text-align: center; font-style: italic; margin-top: 30px;">
+                Thank you for choosing Pranna Wellness
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="social-links">
+                <a href="#">Instagram</a> •
+                <a href="#">Facebook</a> •
+                <a href="#">WhatsApp</a>
+            </div>
+            <p>© 2026 Pranna Wellness Retreat. All rights reserved.</p>
+            <p>Kathmandu, Nepal</p>
+            <p class="note">Himalayan stillness, worldwide.</p>
+        </div>
+    </div>
+</body>
+</html>
