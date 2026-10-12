@@ -18,6 +18,7 @@ urlpatterns = [
     path('api/teams/', include('teams.urls')),
     path('api/gallery/', include('gallery.urls')),
     path('api/testimonials/', include('testimonials.urls')),
+    path('api/events/', include('events.urls')),
 
     # path('jet/', include('jet.urls', 'jet')),  # JET UI components
     # path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
